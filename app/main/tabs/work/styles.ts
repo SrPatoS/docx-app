@@ -65,5 +65,10 @@ export const styles = StyleSheet.create({
 		borderColor: theme.borderColor,
 		borderWidth: 1,
 		marginTop: 10
+	},
+	markContainer: {
+		width: "97%",
+		alignSelf: "center",
+		marginTop: 10
 	}
 });

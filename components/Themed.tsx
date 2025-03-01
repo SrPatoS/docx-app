@@ -50,7 +50,7 @@ export function View(props: ViewProps) {
 
 export function StatusBarThemed(props: ThemeProps) {
 	const { lightColor, darkColor } = props;
-	let themeUsed = useColorScheme() ?? "light";
+	let themeUsed = useColorScheme() ?? "dark";
 
 	let backgroundColor = useThemeColor(
 		{ light: lightColor, dark: darkColor },
@@ -60,6 +60,8 @@ export function StatusBarThemed(props: ThemeProps) {
 	if (props.setPrimaryBackgroundColor) {
 		backgroundColor = theme.primary;
 		themeUsed = "light";
+	} else {
+		themeUsed = "dark";
 	}
 
 	return (

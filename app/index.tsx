@@ -2,28 +2,28 @@
 import { useEffect, useState } from "react";
 import { LocalStorageCore } from "@/core/local-storage.core";
 import { MemoryStorageCore } from "@/core/memory-storage.core";
+import { logger } from "react-native-logs";
+import { Event } from "@/core/event/event";
 
 export default function Index() {
-  const [loading, setLoading] = useState(true);
-  const [redirectTo, setRedirectTo] = useState<"/main/main" | "/auth/auth" | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [redirectTo, setRedirectTo] = useState<"/cloud/cloud" | "/auth/auth" | null>(null);
 
-  useEffect(() => {
-    const initialConfig = async () => {
-      const token = (await new LocalStorageCore().read("auth")) as string;
-      MemoryStorageCore.instance.token = token;
+	useEffect(() => {
+		const initialConfig = async () => {
+			const token = (await new LocalStorageCore().read("auth")) as string;
+			MemoryStorageCore.instance.token = token;
 
-      console.log(token);
+			setRedirectTo(token ? "/cloud/cloud" : "/auth/auth");
+			setLoading(false);
+		};
 
-      setRedirectTo(token ? "/main/main" : "/auth/auth");
-      setLoading(false);
-    };
+		initialConfig();
+	}, []);
 
-    initialConfig();
-  }, []);
+	if (redirectTo) {
+		return <Redirect href={redirectTo} />;
+	}
 
-  if (redirectTo) {
-    return <Redirect href={redirectTo}/>;
-  }
-
-  return null;
+	return null;
 }

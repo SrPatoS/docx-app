@@ -6,6 +6,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { theme } from "@/theme/theme";
 import { DataTable } from "react-native-paper";
 import { TableComponent } from "@/components/TableComponent";
+import CustomButton from "@/components/CustomButton";
 
 const mockProfile = "https://avatars.githubusercontent.com/u/112360235?v=4";
 
@@ -73,6 +74,7 @@ const data = [
 
 export default function Work() {
 	const [dayName, setDayName] = useState<string>("");
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		setDayName(DateUtils.getDayName());
@@ -95,6 +97,9 @@ export default function Work() {
 				</View>
 				<View style={styles.weekReport}>
 					<TableComponent numberOfItemsPerPage={3} columns={columns} items={data} />
+				</View>
+				<View style={styles.markContainer}>
+					<CustomButton disabled={true} loading={false} title="" onPress={() => setLoading(true)} />
 				</View>
 			</ScrollView>
 		</View>
