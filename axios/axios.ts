@@ -12,6 +12,5 @@ const api = axios.create({
 	timeoutErrorMessage: "Erro de conexão com o servidor"
 });
 api.defaults.headers["api-key"] = environment.apiKey;
-api.defaults.headers["Authorization"] = `Bearer ${MemoryStorageCore.instance?.token ?? ""}`;
 
 export default api;

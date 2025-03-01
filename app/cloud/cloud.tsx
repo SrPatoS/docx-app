@@ -8,17 +8,51 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { ProgressBar } from "react-native-paper";
 import { theme } from "@/theme/theme";
 import { useEffect, useState } from "react";
+import * as SQLite from "expo-sqlite";
+import { IDatabase } from "@/database/database.interface";
+import { UserDatabase } from "@/database/user.database";
+import { log } from "@/app/_layout";
 
 const cloudList: ICloud[] = [new UserCloud()];
+const databaseList: IDatabase[] = [
+	new UserDatabase()
+];
 
 export default function Cloud() {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+	const dbName = "docx";
+
+	async function setUpDatabase() {
+		const database = await SQLite.openDatabaseAsync(dbName);
+
+		for (let i = 0; i < databaseList.length; i++) {
+			try {
+				await databaseList[i].config(database);
+			} catch (error: any) {
+				setErrorMessage(`Erro ao configurar ${cloudList[i].title}: ${error.message}`);
+			}
+		}
+	}
+
+	async function deleteDatabase() {
+		try {
+			const db = await SQLite.openDatabaseAsync(dbName);
+			await db.closeAsync();
+			await SQLite.deleteDatabaseAsync(dbName);
+			log.debug("database deleted successfully.");
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
 	async function downloadClouds() {
 		setLoading(true);
 		setErrorMessage(null);
+
+		await deleteDatabase();
+		await setUpDatabase();
 
 		for (let i = 0; i < cloudList.length; i++) {
 			setCurrentIndex(i);

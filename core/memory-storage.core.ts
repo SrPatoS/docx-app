@@ -1,9 +1,9 @@
 ﻿export class MemoryStorageCore {
-  public static instance: MemoryStorageCore;
+  public static Instance: MemoryStorageCore;
 
   constructor() {
-    if (!MemoryStorageCore.instance) {
-      MemoryStorageCore.instance = this;
+    if (!MemoryStorageCore.Instance) {
+      MemoryStorageCore.Instance = this;
     }
   }
 
