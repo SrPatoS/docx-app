@@ -1,11 +1,11 @@
 ﻿export class MemoryStorageCore {
-  public static Instance: MemoryStorageCore;
+	public static Instance: MemoryStorageCore;
 
-  constructor() {
-    if (!MemoryStorageCore.Instance) {
-      MemoryStorageCore.Instance = this;
-    }
-  }
+	constructor() {
+		if (!MemoryStorageCore.Instance) {
+			MemoryStorageCore.Instance = this;
+		}
+	}
 
-  token: string = "";
+	token: string = "";
 }

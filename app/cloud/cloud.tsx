@@ -12,8 +12,13 @@ import * as SQLite from "expo-sqlite";
 import { IDatabase } from "@/database/database.interface";
 import { UserDatabase } from "@/database/user.database";
 import { log } from "@/app/_layout";
+import { AxiosCloud } from "@/core/clouds/axios.cloud";
+import { useRouter } from "expo-router";
 
-const cloudList: ICloud[] = [new UserCloud()];
+const cloudList: ICloud[] = [
+	new UserCloud()
+];
+
 const databaseList: IDatabase[] = [
 	new UserDatabase()
 ];
@@ -23,6 +28,7 @@ export default function Cloud() {
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const dbName = "docx";
+	const router = useRouter();
 
 	async function setUpDatabase() {
 		const database = await SQLite.openDatabaseAsync(dbName);
@@ -66,9 +72,27 @@ export default function Cloud() {
 		setLoading(false);
 	}
 
+	async function check(): Promise<boolean> {
+		try {
+			const result = await AxiosCloud.Instance.post<{ download: boolean }>({
+				date: new Date().toISOString()
+			}, "/user/last-cloud-downloaded");
+			if (result.data.download) {
+				return true;
+			}
+		} catch (error: any) {
+			log.error(error);
+		}
+		return false;
+	}
+
 	useEffect(() => {
 		(async () => {
-			await downloadClouds();
+			if (await check()) {
+				await downloadClouds();
+			} else {
+				router.replace("/main/main");
+			}
 		})();
 	}, []);
 

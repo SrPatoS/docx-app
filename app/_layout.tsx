@@ -11,6 +11,7 @@ import { MemoryStorageCore } from "@/core/memory-storage.core";
 import { PaperProvider } from "react-native-paper";
 import { logger } from "react-native-logs";
 import { Event } from "@/core/event/event";
+import { AxiosCloud } from "@/core/clouds/axios.cloud";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -26,7 +27,9 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export const log = logger.createLogger();
+
 new Event();
+new AxiosCloud();
 
 export default function RootLayout() {
 	const [loaded, error] = useFonts({
@@ -66,10 +69,11 @@ function RootLayoutNav() {
 	return (
 		<PaperProvider>
 			<ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-				<Stack initialRouteName="auth/auth">
+				<Stack initialRouteName="index">
 					<Stack.Screen name="main/main" options={{ headerShown: false }} />
 					<Stack.Screen name="auth/auth" options={{ headerShown: false }} />
 					<Stack.Screen name="cloud/cloud" options={{ headerShown: false }} />
+					<Stack.Screen name="index" options={{ headerShown: false }} />
 				</Stack>
 			</ThemeProvider>
 		</PaperProvider>

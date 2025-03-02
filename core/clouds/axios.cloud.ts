@@ -3,13 +3,31 @@ import api from "@/axios/axios";
 import { Event } from "@/core/event/event";
 
 export class AxiosCloud {
-	async get(url: string): Promise<AxiosResponse> {
+	public static Instance: AxiosCloud;
+
+	constructor() {
+		if (!AxiosCloud.Instance) {
+			AxiosCloud.Instance = this;
+		}
+	}
+
+	async get<T>(url: string): Promise<{ data: T }> {
 		try {
-			return await api.get(url);
+			return (await api.get(url)).data;
 		} catch (error: any) {
 			if (error.response && error.response.status === 401) {
 				Event.Instance.emit("redirect-login");
-				console.log("Usuário não autorizado. Redirecionando para o login.");
+			}
+			throw error;
+		}
+	}
+
+	async post<T>(data: any, url: string): Promise<{ data: T }> {
+		try {
+			return (await api.post(url, data)).data;
+		} catch (error: any) {
+			if (error.response && error.response.status === 401) {
+				Event.Instance.emit("redirect-login");
 			}
 			throw error;
 		}
