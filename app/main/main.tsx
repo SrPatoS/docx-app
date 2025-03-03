@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Work from "@/app/main/tabs/work/work";
+import Cloud from "@/app/cloud/cloud";
 
 export default function Main() {
 	return (
@@ -23,6 +24,9 @@ export default function Main() {
 				})}
 			>
 				<Tab.Screen name="Home" component={Work} />
+				<Tab.Screen name="Download" component={() => {
+					return <Cloud manualDownload={true} />;
+				}} />
 			</Tab.Navigator>
 		</View>
 	);

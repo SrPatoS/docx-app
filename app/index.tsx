@@ -10,9 +10,17 @@ export default function Index() {
 
 	useEffect(() => {
 		const initialConfig = async () => {
-			const token = (await new LocalStorageCore().read("auth")) as string;
+			const localStorageCore = new LocalStorageCore();
+			const token = (await localStorageCore.read("auth")) as string;
+			const firstAccess = (await localStorageCore.read("firstAccess")) as boolean;
+
 			MemoryStorageCore.Instance.token = token;
 			api.defaults.headers["Authorization"] = `Bearer ${MemoryStorageCore.Instance?.token ?? ""}`;
+
+			if (firstAccess === null) {
+				await localStorageCore.create("firstAccess", false);
+				MemoryStorageCore.Instance.firstAccess = true;
+			}
 
 			setRedirectTo(token ? "/cloud/cloud" : "/auth/auth");
 			setLoading(false);

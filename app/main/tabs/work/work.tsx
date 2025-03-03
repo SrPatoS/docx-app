@@ -2,11 +2,12 @@
 import { styles } from "./styles";
 import { StatusBarThemed } from "@/components/Themed";
 import { DateUtils } from "@/core/utils/date.utils";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { TableComponent } from "@/components/TableComponent";
 import CustomButton from "@/components/CustomButton";
 import { IUser, UserDatabase } from "@/database/user.database";
 import { UserData } from "@expo/config/build/getUserState";
+import { useFocusEffect } from "expo-router";
 
 const mockProfile = "https://avatars.githubusercontent.com/u/112360235?v=4";
 
@@ -82,11 +83,15 @@ export default function Work() {
 		setUser(result);
 	}
 
-	useEffect(() => {
-		(async () => {
-			await getUserData();
-		})();
+	useFocusEffect(
+		useCallback(() => {
+			(async () => {
+				await getUserData();
+			})();
+		}, [])
+	);
 
+	useEffect(() => {
 		setDayName(DateUtils.getDayName());
 	}, []);
 

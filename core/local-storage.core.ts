@@ -1,6 +1,6 @@
 ﻿import AsyncStorage from '@react-native-async-storage/async-storage';
 
-type Keys = "auth"
+type Keys = "auth" | "firstAccess"
 
 export class LocalStorageCore {
   async create(key: Keys, data: Object): Promise<void> {

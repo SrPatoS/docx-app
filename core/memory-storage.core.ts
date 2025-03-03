@@ -8,4 +8,5 @@
 	}
 
 	token: string = "";
+	firstAccess: boolean = false;
 }

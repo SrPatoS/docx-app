@@ -14,6 +14,7 @@ import { UserDatabase } from "@/database/user.database";
 import { log } from "@/app/_layout";
 import { AxiosCloud } from "@/core/clouds/axios.cloud";
 import { useRouter } from "expo-router";
+import { MemoryStorageCore } from "@/core/memory-storage.core";
 
 const cloudList: ICloud[] = [
 	new UserCloud()
@@ -23,7 +24,11 @@ const databaseList: IDatabase[] = [
 	new UserDatabase()
 ];
 
-export default function Cloud() {
+interface IProps {
+	manualDownload?: boolean;
+}
+
+export default function Cloud({ manualDownload }: IProps) {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -58,6 +63,7 @@ export default function Cloud() {
 		setErrorMessage(null);
 
 		await deleteDatabase();
+		await setUpDatabase();
 
 		for (let i = 0; i < cloudList.length; i++) {
 			setCurrentIndex(i);
@@ -68,6 +74,10 @@ export default function Cloud() {
 			}
 		}
 
+		MemoryStorageCore.Instance.firstAccess = false;
+
+		redirectToMain();
+
 		setLoading(false);
 	}
 
@@ -76,7 +86,7 @@ export default function Cloud() {
 			const result = await AxiosCloud.Instance.post<{ download: boolean }>({
 				date: new Date().toISOString()
 			}, "/user/last-cloud-downloaded");
-			if (result.data.download) {
+			if (result.data.download || MemoryStorageCore.Instance.firstAccess) {
 				return true;
 			}
 		} catch (error: any) {
@@ -87,14 +97,22 @@ export default function Cloud() {
 
 	useEffect(() => {
 		(async () => {
-			await setUpDatabase();
+			if (!manualDownload) {
+				await setUpDatabase();
+			}
 			if (await check()) {
 				await downloadClouds();
 			} else {
-				router.replace("/main/main");
+				if (!manualDownload) {
+					redirectToMain();
+				}
 			}
 		})();
 	}, []);
+
+	function redirectToMain() {
+		router.replace("/main/main");
+	}
 
 	return (
 		<View style={styles.container}>
