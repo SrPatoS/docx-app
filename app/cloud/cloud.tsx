@@ -58,7 +58,6 @@ export default function Cloud() {
 		setErrorMessage(null);
 
 		await deleteDatabase();
-		await setUpDatabase();
 
 		for (let i = 0; i < cloudList.length; i++) {
 			setCurrentIndex(i);
@@ -88,6 +87,7 @@ export default function Cloud() {
 
 	useEffect(() => {
 		(async () => {
+			await setUpDatabase();
 			if (await check()) {
 				await downloadClouds();
 			} else {

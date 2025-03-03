@@ -3,10 +3,10 @@ import { styles } from "./styles";
 import { StatusBarThemed } from "@/components/Themed";
 import { DateUtils } from "@/core/utils/date.utils";
 import { ReactNode, useEffect, useState } from "react";
-import { theme } from "@/theme/theme";
-import { DataTable } from "react-native-paper";
 import { TableComponent } from "@/components/TableComponent";
 import CustomButton from "@/components/CustomButton";
+import { IUser, UserDatabase } from "@/database/user.database";
+import { UserData } from "@expo/config/build/getUserState";
 
 const mockProfile = "https://avatars.githubusercontent.com/u/112360235?v=4";
 
@@ -75,8 +75,18 @@ const data = [
 export default function Work() {
 	const [dayName, setDayName] = useState<string>("");
 	const [loading, setLoading] = useState(false);
+	const [user, setUser] = useState<IUser | null>(null);
+
+	async function getUserData() {
+		const result = await UserDatabase.Instance.read();
+		setUser(result);
+	}
 
 	useEffect(() => {
+		(async () => {
+			await getUserData();
+		})();
+
 		setDayName(DateUtils.getDayName());
 	}, []);
 
@@ -89,10 +99,10 @@ export default function Work() {
 			</View>
 			<ScrollView style={{ width: "100%" }}>
 				<View style={styles.infoContainer}>
-					<Image style={styles.imageProfile} src={mockProfile}></Image>
+					<Image style={styles.imageProfile} src={user?.avatar ?? mockProfile}></Image>
 					<View>
-						<Text style={styles.profileName}>Vinicius Aviz</Text>
-						<Text style={styles.profileCode}>Código: 55500055</Text>
+						<Text style={styles.profileName}>{user?.name}</Text>
+						<Text style={styles.profileCode}>Email: {user?.email}</Text>
 					</View>
 				</View>
 				<View style={styles.weekReport}>
