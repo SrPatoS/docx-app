@@ -98,11 +98,13 @@ export default function Work() {
 				<Text style={styles.hourName}>08:00</Text>
 			</View>
 			<ScrollView style={{ width: "100%" }}>
-				<View style={styles.infoContainer}>
-					<Image style={styles.imageProfile} src={user?.avatar ?? mockProfile}></Image>
-					<View>
-						<Text style={styles.profileName}>{user?.name}</Text>
-						<Text style={styles.profileCode}>Email: {user?.email}</Text>
+				<View style={{ width: "100%", alignItems: "center" }}>
+					<View style={styles.infoContainer}>
+						<Image style={styles.imageProfile} src={user?.avatar ?? mockProfile}></Image>
+						<View>
+							<Text style={styles.profileName}>{user?.name}</Text>
+							<Text style={styles.profileCode}>Email: {user?.email}</Text>
+						</View>
 					</View>
 				</View>
 				<View style={styles.weekReport}>
