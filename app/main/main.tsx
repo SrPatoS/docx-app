@@ -19,7 +19,7 @@ interface ITab {
 export default function Main() {
 	const [tabs, setTabs] = useState<ITab[]>([
 		{ name: "Home", icon: "home", component: Work, },
-		/* { name: "Profile", icon: "person", component: Profile }, */
+		{ name: "Profile", icon: "person", component: Profile },
 		{ name: "Menu", icon: "menu", component: Menu },
 		/* { name: "Download", icon: "cloud-download", component: () => <Cloud manualDownload={true} />}  */
 	]);
