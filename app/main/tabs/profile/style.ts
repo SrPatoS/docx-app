@@ -7,10 +7,10 @@ export const styles = StyleSheet.create({
         marginTop: 60,
         padding: 16,
         backgroundColor: "#f2f2f2",
+        gap: 16,
     },
     card: {
         width: "100%",
-        maxWidth: 350,
         backgroundColor: "#5B5EB4",
         borderRadius: 16,
         padding: 24,
@@ -34,10 +34,6 @@ export const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
     },
-    addPictureText: {
-        color: "#aaa",
-        fontSize: 16,
-    },
     name: {
         fontSize: 20,
         fontWeight: "bold",
@@ -46,5 +42,25 @@ export const styles = StyleSheet.create({
     email: {
         fontSize: 16,
         color: "#fff",
+    },
+    pictureButton: {
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginBottom: 10,
+    },
+    
+    addButton: {
+        backgroundColor: "#4CAF50",
+    },
+    
+    removeButton: {
+        backgroundColor: "#FF7F7F", 
+    },
+    
+    pictureButtonText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "bold",
     },
 });
