@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { View } from "@/components/Themed";
 import { styles } from "@/app/main/styles";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Profile } from "./tabs/profile/profile";
+import { useState } from "react";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,13 +14,11 @@ interface ITab {
 	component: () => JSX.Element;
 }
 
-const tabs: ITab[] = [
-	{ name: "Home", icon: "home", component: Work, },
-	/* { name: "Profile", icon: "person", component: Profile }, */
-	{ name: "Download", icon: "cloud-download", component: () => <Cloud manualDownload={true} /> }
-];
-
 export default function Main() {
+	const [tabs, setTabs] = useState<ITab[]>([
+		{ name: "Home", icon: "home", component: Work, },
+		{ name: "Download", icon: "cloud-download", component: () => <Cloud manualDownload={true} /> }
+	]);
 	return (
 		<View style={styles.container}>
 			<Tab.Navigator
