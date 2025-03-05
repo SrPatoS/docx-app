@@ -5,6 +5,8 @@ import { View } from "@/components/Themed";
 import { styles } from "@/app/main/styles";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useState } from "react";
+import { Profile } from "./tabs/profile/profile";
+import { Menu } from "./tabs/menu/menu";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +19,9 @@ interface ITab {
 export default function Main() {
 	const [tabs, setTabs] = useState<ITab[]>([
 		{ name: "Home", icon: "home", component: Work, },
-		{ name: "Download", icon: "cloud-download", component: () => <Cloud manualDownload={true} /> }
+		/* { name: "Profile", icon: "person", component: Profile }, */
+		{ name: "Menu", icon: "menu", component: Menu },
+		/* { name: "Download", icon: "cloud-download", component: () => <Cloud manualDownload={true} />}  */
 	]);
 	return (
 		<View style={styles.container}>
