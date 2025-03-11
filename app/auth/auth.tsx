@@ -9,7 +9,6 @@ import { AuthUseCase } from "@/app/auth/auth.usecase";
 import { showAlert } from "@/components/showAlert";
 import { useRouter } from "expo-router";
 import api from "@/axios/axios";
-import { MemoryStorageCore } from "@/core/memory-storage.core";
 
 export default function Auth() {
 	const [loading, setLoading] = useState(false);
@@ -18,12 +17,10 @@ export default function Auth() {
 	const router = useRouter();
 
 	const onAuth = async () => {
-		const storage = new LocalStorageCore();
 		const useCase = new AuthUseCase();
 		try {
 			setLoading(true);
 			const result = await useCase.auth(email, password);
-			await storage.create("auth", result.data.token);
 			setLoading(false);
 			api.defaults.headers["Authorization"] = `Bearer ${result.data.token ?? ""}`;
 			router.replace("/cloud/cloud");

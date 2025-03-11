@@ -5,9 +5,9 @@ import { DateUtils } from "@/core/utils/date.utils";
 import { ReactNode, useCallback, useEffect, useState } from "react";
 import { TableComponent } from "@/components/TableComponent";
 import CustomButton from "@/components/CustomButton";
-import { IUser, UserDatabase } from "@/database/user.database";
-import { UserData } from "@expo/config/build/getUserState";
 import { useFocusEffect } from "expo-router";
+import { FindUserUseCase } from "@/core/utils/finduser.usecase";
+import { IUser } from "@/app/interfaces/user.interface";
 
 const mockProfile = "https://avatars.githubusercontent.com/u/112360235?v=4";
 
@@ -79,7 +79,8 @@ export default function Work() {
 	const [user, setUser] = useState<IUser | null>(null);
 
 	async function getUserData() {
-		const result = await UserDatabase.Instance.read();
+		const findUser = new FindUserUseCase()
+		const result = await findUser.handle();
 		setUser(result);
 	}
 

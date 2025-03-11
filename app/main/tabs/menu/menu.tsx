@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import Cloud from "@/app/cloud/cloud";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { LocalStorageCore } from "@/core/local-storage.core";
 
 interface IMenuOption {
     name: string;
@@ -14,9 +15,15 @@ interface IMenuOption {
 export function Menu() {
     const router = useRouter();
     const [menuOptions, setMenuOptions] = useState<IMenuOption[]>([
-        { name: "Atualizar Dados", icon: "cloud-download", path: () => router.push('/cloud/cloud') },
+        { name: "Atualizar Dados", icon: "cloud-download", path: () => handleLogout() },
         { name: "Sair", icon: "log-out", path: () => router.push('/auth/auth') },
     ]);
+
+    const handleLogout = () => {
+        const storage = new LocalStorageCore();
+        storage.clear()
+        router.push('/auth/auth');
+    }
 
     return (
         <View style={styles.container}>

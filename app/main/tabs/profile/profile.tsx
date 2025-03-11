@@ -1,19 +1,22 @@
 import React, { useCallback, useState } from "react";
-import { Text, View, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
-import { IUser, UserDatabase } from "@/database/user.database";
+import { Text, View, Image, TouchableOpacity, Alert } from "react-native";
 import { useFocusEffect } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import { styles } from "./style";
 import api from "@/axios/axios";
 import CustomButton from "@/components/CustomButton";
+import { FindUserUseCase } from "../../../../core/utils/finduser.usecase";
+import { IUser } from "@/app/interfaces/user.interface";
 
 export function Profile() {
     const [user, setUser] = useState<IUser>();
     const [selectedImage, setSelectedImage] = useState<string>('');
 
     async function getUserData() {
-        const result = await UserDatabase.Instance.read();
-        setUser(result);
+        const findUser = new FindUserUseCase();
+        const data = await findUser.handle();
+        console.log(data);
+        setUser(data);
     }
 
     useFocusEffect(
