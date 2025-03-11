@@ -6,7 +6,7 @@ import api from "@/axios/axios";
 
 export default function Index() {
 	const [loading, setLoading] = useState(true);
-	const [redirectTo, setRedirectTo] = useState<"/cloud/cloud" | "/auth/auth" | null>(null);
+	const [redirectTo, setRedirectTo] = useState<"/main/main" | "/auth/auth" | null>(null);
 
 	useEffect(() => {
 		const initialConfig = async () => {
@@ -22,7 +22,7 @@ export default function Index() {
 				MemoryStorageCore.Instance.firstAccess = true;
 			}
 
-			setRedirectTo(token ? "/cloud/cloud" : "/auth/auth");
+			setRedirectTo(token ? "/main/main" : "/auth/auth");
 			setLoading(false);
 		};
 

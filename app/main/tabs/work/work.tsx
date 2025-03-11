@@ -2,10 +2,9 @@
 import { styles } from "./styles";
 import { StatusBarThemed } from "@/components/Themed";
 import { DateUtils } from "@/core/utils/date.utils";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TableComponent } from "@/components/TableComponent";
 import CustomButton from "@/components/CustomButton";
-import { useFocusEffect } from "expo-router";
 import { FindUserUseCase } from "@/core/utils/finduser.usecase";
 import { IUser } from "@/app/interfaces/user.interface";
 
@@ -77,6 +76,7 @@ export default function Work() {
 	const [dayName, setDayName] = useState<string>("");
 	const [loading, setLoading] = useState(false);
 	const [user, setUser] = useState<IUser | null>(null);
+	const [currentTime, setCurrentTime] = useState<string>("");
 
 	async function getUserData() {
 		const findUser = new FindUserUseCase()
@@ -84,16 +84,13 @@ export default function Work() {
 		setUser(result);
 	}
 
-	useFocusEffect(
-		useCallback(() => {
-			(async () => {
-				await getUserData();
-			})();
-		}, [])
-	);
-
 	useEffect(() => {
-		setDayName(DateUtils.getDayName());
+		const interval = setInterval(() => {
+			getUserData();
+			setDayName(DateUtils.getDayName());
+			setCurrentTime(DateUtils.getCurrentTime());
+		}, 1000);
+		return () => clearInterval(interval);
 	}, []);
 
 	return (
@@ -101,7 +98,7 @@ export default function Work() {
 			<StatusBarThemed setPrimaryBackgroundColor={true} />
 			<View style={styles.topCard}>
 				<Text style={styles.dayName}>{dayName}</Text>
-				<Text style={styles.hourName}>08:00</Text>
+				<Text style={styles.hourName}>{currentTime}</Text>
 			</View>
 			<ScrollView style={{ width: "100%" }}>
 				<View style={{ width: "100%", alignItems: "center" }}>
