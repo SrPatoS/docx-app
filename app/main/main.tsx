@@ -1,5 +1,4 @@
 ﻿import Work from "@/app/main/tabs/work/work";
-import Cloud from "@/app/cloud/cloud";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { View } from "@/components/Themed";
 import { styles } from "@/app/main/styles";
@@ -21,7 +20,6 @@ export default function Main() {
 		{ name: "Home", icon: "home", component: Work, },
 		{ name: "Profile", icon: "person", component: Profile },
 		{ name: "Menu", icon: "menu", component: Menu },
-		/* { name: "Download", icon: "cloud-download", component: () => <Cloud manualDownload={true} />}  */
 	]);
 	return (
 		<View style={styles.container}>

@@ -23,7 +23,7 @@ export default function Auth() {
 			const result = await useCase.auth(email, password);
 			setLoading(false);
 			api.defaults.headers["Authorization"] = `Bearer ${result.data.token ?? ""}`;
-			router.replace("/cloud/cloud");
+			router.replace("/main/main");
 		} catch (error: any) {
 			setLoading(false);
 			showAlert(error.data.message, "");

@@ -15,7 +15,6 @@ export function Profile() {
     async function getUserData() {
         const findUser = new FindUserUseCase();
         const data = await findUser.handle();
-        console.log(data);
         setUser(data);
     }
 

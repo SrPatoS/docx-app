@@ -1,6 +1,5 @@
 ﻿import axios from "axios";
 import { environment } from "@/environment";
-import { LocalStorageCore } from "@/core/local-storage.core";
 
 const api = axios.create({
 	baseURL: environment.baseUrl,
