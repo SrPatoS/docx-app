@@ -11,6 +11,7 @@ import { IUser } from "@/app/interfaces/user.interface";
 export function Profile() {
     const [user, setUser] = useState<IUser>();
     const [selectedImage, setSelectedImage] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     async function getUserData() {
         const findUser = new FindUserUseCase();
@@ -37,6 +38,7 @@ export function Profile() {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ["images"],
             quality: 1,
+            base64: true,
         });
 
         if (!result.canceled) {
@@ -50,24 +52,37 @@ export function Profile() {
     }
 
     async function handleUpdateImage(uri: string) {
-        const formData = new FormData();
-        formData.append("avatar", {
-            uri,
-            name: "avatar.jpg",
-            type: "image/jpeg",
-        } as any);
+        if (!uri) return;
+
+        setLoading(true);
 
         try {
-            await api.put("/users", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            Alert.alert("Sucesso", "Foto atualizada com sucesso!");
-            await getUserData();
+            const pathUri = await fetch(uri);
+            const blob = await pathUri.blob();
+
+            const formData = new FormData();
+            formData.append("image", {
+                uri,
+                buffer: blob,
+                name: "avatar.jpg",
+                type: "image/jpeg",
+            } as any);
+
+            const response = await api.post("/user/avatar/upload", formData);
+
+            if (response.status === 200) {
+                Alert.alert("Sucesso", "Foto atualizada com sucesso!");
+            }
+
+            setSelectedImage('');
         } catch (error) {
             Alert.alert("Erro", "Não foi possível atualizar a foto.");
+            setLoading(false);
+        } finally {
+            await getUserData();
+            setLoading(false);
         }
+
     }
 
     return (
@@ -95,7 +110,12 @@ export function Profile() {
                 <Text style={styles.name}>{user?.name}</Text>
                 <Text style={styles.email}>{user?.email}</Text>
             </View>
-            <CustomButton title="Atualizar" onPress={() => handleUpdateImage(selectedImage)} />
+            <CustomButton
+                title="Atualizar"
+                loading={loading}
+                disabled={!selectedImage}
+                onPress={() => handleUpdateImage(selectedImage)}
+            />
         </View>
     );
 }
