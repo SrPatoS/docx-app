@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 export interface ITableData {
 	items: Record<string, any>[];
 	columns: { title: string; key: string; numeric?: boolean }[];
-	numberOfItemsPerPage?: number; // Propriedade opcional
+	numberOfItemsPerPage?: number;
 }
 
 export function TableComponent(props: ITableData) {
@@ -45,6 +45,6 @@ export function TableComponent(props: ITableData) {
 				label={`${from + 1}-${to} de ${props.items.length}`}
 				showFastPaginationControls
 			/>
-		</DataTable>
+		</DataTable>	
 	);
 }

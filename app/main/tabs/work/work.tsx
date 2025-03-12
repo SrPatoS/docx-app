@@ -7,8 +7,7 @@ import { TableComponent } from "@/components/TableComponent";
 import CustomButton from "@/components/CustomButton";
 import { FindUserUseCase } from "@/core/utils/finduser.usecase";
 import { IUser } from "@/app/interfaces/user.interface";
-
-const mockProfile = "https://avatars.githubusercontent.com/u/112360235?v=4";
+import { GetWorkWeekData } from "./usecase/getWorkWeekData";
 
 const columns = [
 	{
@@ -16,59 +15,21 @@ const columns = [
 		key: "day"
 	},
 	{
-		title: "Início",
+		title: "Entrada",
 		key: "start"
 	},
 	{
-		title: "Fim",
-		key: "end"
+		title: "Almoço",
+		key: "lunchStart"
 	},
 	{
 		title: "Almoço",
-		key: "dinerTime"
+		key: "lunchEnd"
 	},
 	{
-		title: "Trabalho",
-		key: "workTime"
-	}
-];
-
-const data = [
-	{
-		day: "Segunda",
-		start: "08:00",
-		end: "17:00",
-		workTime: "9h",
-		dinerTime: "12:00 - 13:00"
+		title: "Saída",
+		key: "end"
 	},
-	{
-		day: "Terça",
-		start: "09:00",
-		end: "18:00",
-		workTime: "9h",
-		dinerTime: "12:30 - 13:30"
-	},
-	{
-		day: "Quarta",
-		start: "08:30",
-		end: "17:30",
-		workTime: "9h",
-		dinerTime: "12:00 - 13:00"
-	},
-	{
-		day: "Quinta",
-		start: "07:00",
-		end: "16:00",
-		workTime: "9h",
-		dinerTime: "11:30 - 12:30"
-	},
-	{
-		day: "Sexta",
-		start: "08:00",
-		end: "12:00",
-		workTime: "4h",
-		dinerTime: "—"
-	}
 ];
 
 
@@ -77,6 +38,7 @@ export default function Work() {
 	const [loading, setLoading] = useState(false);
 	const [user, setUser] = useState<IUser | null>(null);
 	const [currentTime, setCurrentTime] = useState<string>("");
+	const [workWeekData, setWorkWeekData] = useState<any>([]);
 
 	async function getUserData() {
 		const findUser = new FindUserUseCase()
@@ -84,9 +46,17 @@ export default function Work() {
 		setUser(result);
 	}
 
+	async function getWorkWeekData() {
+		const usecase = new GetWorkWeekData();
+		const result = await usecase.handle()
+
+		setWorkWeekData(result[0]);
+	}
+
 	useEffect(() => {
+		getUserData();
+		getWorkWeekData();
 		const interval = setInterval(() => {
-			getUserData();
 			setDayName(DateUtils.getDayName());
 			setCurrentTime(DateUtils.getCurrentTime());
 		}, 1000);
@@ -103,18 +73,32 @@ export default function Work() {
 			<ScrollView style={{ width: "100%" }}>
 				<View style={{ width: "100%", alignItems: "center" }}>
 					<View style={styles.infoContainer}>
-						<Image style={styles.imageProfile} src={user?.avatar ?? mockProfile}></Image>
+						<Image style={styles.imageProfile} src={user?.avatar}></Image>
 						<View>
 							<Text style={styles.profileName}>{user?.name}</Text>
 							<Text style={styles.profileCode}>Email: {user?.email}</Text>
 						</View>
 					</View>
 				</View>
-				<View style={styles.weekReport}>
-					<TableComponent numberOfItemsPerPage={3} columns={columns} items={data} />
-				</View>
 				<View style={styles.markContainer}>
-					<CustomButton disabled={true} loading={false} title="" onPress={() => setLoading(true)} />
+					<CustomButton
+						title="Bater Ponto"
+						onPress={() => setLoading(true)}
+					/>
+				</View>
+				<View style={styles.weekReport}>
+					<TableComponent
+						items={[
+							{ day: "Segunda", ...workWeekData.segunda },
+							{ day: "Terça", ...workWeekData.terca },
+							{ day: "Quarta", ...workWeekData.quarta },
+							{ day: "Quinta", ...workWeekData.quinta },
+							{ day: "Sexta", ...workWeekData.sexta },
+							{ day: "Sábado", ...workWeekData.sabado },
+							{ day: "Domingo", ...workWeekData.domingo },]}
+						numberOfItemsPerPage={6}
+						columns={columns}
+					/>
 				</View>
 			</ScrollView>
 		</View>
