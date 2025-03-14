@@ -1,4 +1,4 @@
-﻿import { Text, View, Image, ScrollView } from "react-native";
+﻿import { Text, View, Image, ScrollView, Alert } from "react-native";
 import { styles } from "./styles";
 import { StatusBarThemed } from "@/components/Themed";
 import { DateUtils } from "@/core/utils/date.utils";
@@ -8,6 +8,7 @@ import CustomButton from "@/components/CustomButton";
 import { FindUserUseCase } from "@/core/utils/finduser.usecase";
 import { IUser } from "@/app/interfaces/user.interface";
 import { GetWorkWeekData } from "./usecase/getWorkWeekData";
+import { IWorkReport, MarkPointUseCase } from "./usecase/markPoint";
 
 const columns = [
 	{
@@ -40,6 +41,16 @@ export default function Work() {
 	const [currentTime, setCurrentTime] = useState<string>("");
 	const [workWeekData, setWorkWeekData] = useState<any>([]);
 
+	useEffect(() => {
+		getUserData();
+		getWorkWeekData();
+		const interval = setInterval(() => {
+			setDayName(DateUtils.getDayName());
+			setCurrentTime(DateUtils.getCurrentTime());
+		}, 1000);
+		return () => clearInterval(interval);
+	}, []);
+
 	async function getUserData() {
 		const findUser = new FindUserUseCase()
 		const result = await findUser.handle();
@@ -53,15 +64,22 @@ export default function Work() {
 		setWorkWeekData(result[0]);
 	}
 
-	useEffect(() => {
-		getUserData();
-		getWorkWeekData();
-		const interval = setInterval(() => {
-			setDayName(DateUtils.getDayName());
-			setCurrentTime(DateUtils.getCurrentTime());
-		}, 1000);
-		return () => clearInterval(interval);
-	}, []);
+	async function markPoint() {
+		setLoading(true);
+		const usecase = new MarkPointUseCase();
+		const workReport: IWorkReport = {
+			startWork: { date: new Date() },
+		}
+		const result = await usecase.handle(workReport);
+
+		if (result.status === 200) {
+			Alert.alert(
+				"Ponto batido com sucesso!",
+				"Você pode conferir o seu ponto no histórico de pontos!",
+			);
+			setLoading(false);
+		}
+	}
 
 	return (
 		<View style={styles.container}>
@@ -83,7 +101,8 @@ export default function Work() {
 				<View style={styles.markContainer}>
 					<CustomButton
 						title="Bater Ponto"
-						onPress={() => setLoading(true)}
+						loading={loading}
+						onPress={markPoint}
 					/>
 				</View>
 				<View style={styles.weekReport}>
