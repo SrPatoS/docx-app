@@ -98,11 +98,12 @@ export default function Work() {
 
 	async function markPoint() {
 		setLoading(true);
-		const usecase = new MarkPointUseCase();
+		const useCase = new MarkPointUseCase();
 
-		const result = await usecase.handle({
+		const result = await useCase.handle({
 			status: currentStatus!.next,
-			observation: ""
+			observation: "",
+			date: new Date()
 		});
 
 		if (result.status === 200) {

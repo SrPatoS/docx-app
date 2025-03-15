@@ -4,6 +4,7 @@ import { WorkStatus } from "@/app/main/tabs/work/work";
 interface ICreateWorkReport {
 	status: WorkStatus;
 	observation: string;
+	date: Date;
 }
 
 export class MarkPointUseCase {
