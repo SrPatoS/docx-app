@@ -7,7 +7,7 @@ import { TableComponent } from "@/components/TableComponent";
 import CustomButton from "@/components/CustomButton";
 import { FindUserUseCase } from "@/core/utils/finduser.usecase";
 import { IUser } from "@/app/interfaces/user.interface";
-import { GetWorkWeekData } from "./usecase/getWorkWeekData";
+import { GetWorkWeekData, IWorkWeek } from "./usecase/getWorkWeekData";
 import { IWorkReport, MarkPointUseCase } from "./usecase/markPoint";
 
 const columns = [
@@ -30,16 +30,15 @@ const columns = [
 	{
 		title: "Saída",
 		key: "end"
-	},
+	}
 ];
-
 
 export default function Work() {
 	const [dayName, setDayName] = useState<string>("");
 	const [loading, setLoading] = useState(false);
 	const [user, setUser] = useState<IUser | null>(null);
 	const [currentTime, setCurrentTime] = useState<string>("");
-	const [workWeekData, setWorkWeekData] = useState<any>([]);
+	const [workWeekData, setWorkWeekData] = useState<IWorkWeek[]>([]);
 
 	useEffect(() => {
 		getUserData();
@@ -52,30 +51,29 @@ export default function Work() {
 	}, []);
 
 	async function getUserData() {
-		const findUser = new FindUserUseCase()
+		const findUser = new FindUserUseCase();
 		const result = await findUser.handle();
 		setUser(result);
 	}
 
 	async function getWorkWeekData() {
-		const usecase = new GetWorkWeekData();
-		const result = await usecase.handle()
-
-		setWorkWeekData(result[0]);
+		const useCase = new GetWorkWeekData();
+		const result = await useCase.handle();
+		setWorkWeekData(result);
 	}
 
 	async function markPoint() {
 		setLoading(true);
 		const usecase = new MarkPointUseCase();
 		const workReport: IWorkReport = {
-			startWork: { date: new Date() },
-		}
+			startWork: { date: new Date() }
+		};
 		const result = await usecase.handle(workReport);
 
 		if (result.status === 200) {
 			Alert.alert(
 				"Ponto batido com sucesso!",
-				"Você pode conferir o seu ponto no histórico de pontos!",
+				"Você pode conferir o seu ponto no histórico de pontos!"
 			);
 			setLoading(false);
 		}
@@ -107,14 +105,7 @@ export default function Work() {
 				</View>
 				<View style={styles.weekReport}>
 					<TableComponent
-						items={[
-							{ day: "Segunda", ...workWeekData.segunda },
-							{ day: "Terça", ...workWeekData.terca },
-							{ day: "Quarta", ...workWeekData.quarta },
-							{ day: "Quinta", ...workWeekData.quinta },
-							{ day: "Sexta", ...workWeekData.sexta },
-							{ day: "Sábado", ...workWeekData.sabado },
-							{ day: "Domingo", ...workWeekData.domingo },]}
+						items={workWeekData}
 						numberOfItemsPerPage={6}
 						columns={columns}
 					/>
