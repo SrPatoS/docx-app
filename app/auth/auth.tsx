@@ -18,11 +18,18 @@ export default function Auth() {
 
 	const onAuth = async () => {
 		const useCase = new AuthUseCase();
+		const localStorage = new LocalStorageCore();
+
 		try {
 			setLoading(true);
 			const result = await useCase.auth(email, password);
+
+			if (result.data.token) {
+				await localStorage.create("auth", result.data.token);
+				api.defaults.headers["Authorization"] = `Bearer ${result.data.token ?? ""}`;
+			}
+
 			setLoading(false);
-			api.defaults.headers["Authorization"] = `Bearer ${result.data.token ?? ""}`;
 			router.replace("/main/main");
 		} catch (error: any) {
 			setLoading(false);
