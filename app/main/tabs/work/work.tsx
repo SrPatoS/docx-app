@@ -11,6 +11,7 @@ import { GetWorkWeekData, IWorkWeek } from "./usecase/getWorkWeekData";
 import { MarkPointUseCase } from "./usecase/markPoint";
 import { GetCurrentStatus, ICurrentStatus } from "@/app/main/tabs/work/usecase/getCurrentStatus";
 import { getWorkPointButtonTitleUtil } from "@/app/main/tabs/work/utils/get-work-point-button-title.util";
+import { GetWeekReport } from "@/app/main/tabs/work/usecase/getWeekReport";
 
 export enum WorkStatus {
 	WaitingStart = "waitingStart",
@@ -54,11 +55,13 @@ export default function Work() {
 		title: "",
 		enabled: false
 	});
+	const [workWeekDataReport, setWorkWeekDataReport] = useState<IWorkWeek[]>([]);
 
 	useEffect(() => {
 		getUserData();
 		getWorkWeekData();
 		getCurrentStatus();
+		getWeekReport();
 		const interval = setInterval(() => {
 			setDayName(DateUtils.getDayName());
 			setCurrentTime(DateUtils.getCurrentTime());
@@ -87,6 +90,12 @@ export default function Work() {
 		setLoading(false);
 	}
 
+	async function getWeekReport() {
+		const useCase = new GetWeekReport();
+		const result = await useCase.handler();
+		setWorkWeekDataReport(result);
+	}
+
 	async function markPoint() {
 		setLoading(true);
 		const usecase = new MarkPointUseCase();
@@ -101,7 +110,12 @@ export default function Work() {
 				"Ponto batido com sucesso!",
 				"Você pode conferir o seu ponto no histórico de pontos!"
 			);
-			await getCurrentStatus();
+
+			await Promise.all([
+				getWeekReport(),
+				getCurrentStatus()
+			]);
+
 			setLoading(false);
 		}
 	}
@@ -132,8 +146,17 @@ export default function Work() {
 					/>
 				</View>
 				<View style={styles.weekReport}>
+					<Text style={styles.titleChart}>Programação de Horários</Text>
 					<TableComponent
 						items={workWeekData}
+						numberOfItemsPerPage={6}
+						columns={columns}
+					/>
+				</View>
+				<View style={styles.weekReport}>
+					<Text style={styles.titleChart}>Relatório Semanal</Text>
+					<TableComponent
+						items={workWeekDataReport}
 						numberOfItemsPerPage={6}
 						columns={columns}
 					/>

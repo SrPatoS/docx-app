@@ -70,5 +70,13 @@ export const styles = StyleSheet.create({
 		width: "97%",
 		alignSelf: "center",
 		marginTop: 10
+	},
+	titleChart: {
+		fontSize: RFValue(12),
+		fontFamily: "RobotoRegular",
+		alignSelf: "center",
+		fontWeight: "bold",
+		marginTop: 10,
+		color: theme.fontSubColor
 	}
 });

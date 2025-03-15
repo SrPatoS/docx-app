@@ -4,4 +4,5 @@
 	textColorWhite: "#fff",
 	borderColor: "#cbcbcb",
 	errorTextColor: "#b01a1a",
+	fontSubColor: "#6e6e6e"
 };
