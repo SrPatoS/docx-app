@@ -1,20 +1,14 @@
 import api from "@/axios/axios";
+import { WorkStatus } from "@/app/main/tabs/work/work";
 
-interface IReport {
-    date: Date;
-    observation?: string;
-}
-
-export interface IWorkReport {
-    startWork?: IReport;
-    startLunch?: IReport;
-    endLunch?: IReport;
-    endWork?: IReport;
+interface ICreateWorkReport {
+	status: WorkStatus;
+	observation: string;
 }
 
 export class MarkPointUseCase {
-    async handle(data: Partial<IWorkReport>) {
-        const response = await api.post("/work-report/markpoint", data);
-        return response;
-    }
+	async handle(data: ICreateWorkReport) {
+		const response = await api.post("/work-report", data);
+		return response;
+	}
 }

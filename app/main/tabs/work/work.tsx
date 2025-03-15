@@ -8,7 +8,17 @@ import CustomButton from "@/components/CustomButton";
 import { FindUserUseCase } from "@/core/utils/finduser.usecase";
 import { IUser } from "@/app/interfaces/user.interface";
 import { GetWorkWeekData, IWorkWeek } from "./usecase/getWorkWeekData";
-import { IWorkReport, MarkPointUseCase } from "./usecase/markPoint";
+import { MarkPointUseCase } from "./usecase/markPoint";
+import { GetCurrentStatus, ICurrentStatus } from "@/app/main/tabs/work/usecase/getCurrentStatus";
+import { getWorkPointButtonTitleUtil } from "@/app/main/tabs/work/utils/get-work-point-button-title.util";
+
+export enum WorkStatus {
+	WaitingStart = "waitingStart",
+	Started = "started",
+	Finished = "finished",
+	LunchStarted = "lunchStarted",
+	LunchFinished = "lunchFinished",
+}
 
 const columns = [
 	{
@@ -39,10 +49,16 @@ export default function Work() {
 	const [user, setUser] = useState<IUser | null>(null);
 	const [currentTime, setCurrentTime] = useState<string>("");
 	const [workWeekData, setWorkWeekData] = useState<IWorkWeek[]>([]);
+	const [currentStatus, setCurrentStatus] = useState<ICurrentStatus | null>(null);
+	const [currentButtonStatus, setCurrentButtonStatus] = useState<{ title: string, enabled: boolean }>({
+		title: "",
+		enabled: false
+	});
 
 	useEffect(() => {
 		getUserData();
 		getWorkWeekData();
+		getCurrentStatus();
 		const interval = setInterval(() => {
 			setDayName(DateUtils.getDayName());
 			setCurrentTime(DateUtils.getCurrentTime());
@@ -62,19 +78,30 @@ export default function Work() {
 		setWorkWeekData(result);
 	}
 
+	async function getCurrentStatus() {
+		setLoading(true);
+		const useCase = new GetCurrentStatus();
+		const result = await useCase.getCurrentStatus();
+		setCurrentStatus(result);
+		setCurrentButtonStatus(getWorkPointButtonTitleUtil(result.current));
+		setLoading(false);
+	}
+
 	async function markPoint() {
 		setLoading(true);
 		const usecase = new MarkPointUseCase();
-		const workReport: IWorkReport = {
-			startWork: { date: new Date() }
-		};
-		const result = await usecase.handle(workReport);
+
+		const result = await usecase.handle({
+			status: currentStatus!.next,
+			observation: ""
+		});
 
 		if (result.status === 200) {
 			Alert.alert(
 				"Ponto batido com sucesso!",
 				"Você pode conferir o seu ponto no histórico de pontos!"
 			);
+			await getCurrentStatus();
 			setLoading(false);
 		}
 	}
@@ -98,9 +125,10 @@ export default function Work() {
 				</View>
 				<View style={styles.markContainer}>
 					<CustomButton
-						title="Bater Ponto"
+						title={currentButtonStatus.title}
 						loading={loading}
 						onPress={markPoint}
+						disabled={!currentButtonStatus.enabled}
 					/>
 				</View>
 				<View style={styles.weekReport}>
