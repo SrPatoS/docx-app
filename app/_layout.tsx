@@ -72,6 +72,7 @@ function RootLayoutNav() {
 				<Stack initialRouteName="index">
 					<Stack.Screen name="main/main" options={{ headerShown: false }} />
 					<Stack.Screen name="auth/auth" options={{ headerShown: false }} />
+					<Stack.Screen name="main/recovery/recoveryPassword" options={{ headerShown: false }} />
 					<Stack.Screen name="index" options={{ headerShown: false }} />
 				</Stack>
 			</ThemeProvider>

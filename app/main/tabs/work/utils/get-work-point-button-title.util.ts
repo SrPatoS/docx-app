@@ -1,6 +1,6 @@
 ﻿import { WorkStatus } from "@/app/main/tabs/work/work";
 
-export function getWorkPointButtonTitleUtil(status: WorkStatus): { title: string, enabled: boolean } {
+export default function getWorkPointButtonTitleUtil(status: WorkStatus): { title: string, enabled: boolean } {
 	let enabled: boolean = true;
 
 	const statusMap: Record<WorkStatus, string> = {

@@ -1,7 +1,7 @@
-﻿import { View } from "react-native";
+﻿import { TouchableOpacity, View } from "react-native";
 import CustomInput from "@/components/CustomInput";
 import styles from "./styles";
-import { StatusBarThemed } from "@/components/Themed";
+import { StatusBarThemed, Text } from "@/components/Themed";
 import CustomButton from "@/components/CustomButton";
 import { useState } from "react";
 import { LocalStorageCore } from "@/core/local-storage.core";
@@ -37,16 +37,38 @@ export default function Auth() {
 		}
 	};
 
+	const goToRecoveryPassword = () => {
+		router.push("/main/recovery/recoveryPassword")
+	}
+
 	return (
 		<View style={styles.container}>
 			<StatusBarThemed />
 			<View style={styles.inputContainer}>
-				<CustomInput setValueOutput={setEmail} label="Email" icon="mail" keyboardType="email-address"
-										 placeholder="Digite seu email" />
-				<CustomInput setValueOutput={setPassword} secureTextEntry={true} label="Senha" icon="key"
-										 placeholder="Digite sua senha" />
-				<CustomButton loading={loading} disabled={loading} title="Fazer Login" onPress={onAuth} />
+				<CustomInput
+					setValueOutput={setEmail}
+					label="Email"
+					icon="mail"
+					keyboardType="email-address"
+					placeholder="Digite seu email"
+				/>
+				<CustomInput
+					setValueOutput={setPassword}
+					secureTextEntry={true}
+					label="Senha"
+					icon="key"
+					placeholder="Digite sua senha"
+				/>
+				<CustomButton
+					loading={loading}
+					disabled={loading}
+					title="Fazer Login"
+					onPress={onAuth}
+				/>
 			</View>
+			<TouchableOpacity onPress={goToRecoveryPassword}>
+				<Text style={styles.recoveryText}>Esqueceu a senha?</Text>
+			</TouchableOpacity>
 		</View>
 	);
 }

@@ -1,11 +1,10 @@
 ﻿import { StyleSheet } from "react-native";
-import Colors from "@/constants/Colors";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "center",
     flexDirection: "column",
     backgroundColor: "white",
   },
@@ -13,6 +12,9 @@ const styles = StyleSheet.create({
     width: "90%",
     gap: 10,
     marginBottom: 20
+  },
+  recoveryText : {
+    fontSize: 16,
   }
 });
 

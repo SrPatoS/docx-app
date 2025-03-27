@@ -3,7 +3,7 @@ import { View, TextInput, Text, StyleSheet, TextInputProps, TouchableOpacity } f
 import { Feather } from "@expo/vector-icons";
 
 type Props = TextInputProps & {
-  label: string;
+  label?: string;
   icon: any;
   secureTextEntry?: boolean;
   setValueOutput: (value: string) => void;
