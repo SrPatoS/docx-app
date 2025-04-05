@@ -10,8 +10,8 @@ import { IUser } from "@/app/interfaces/user.interface";
 import { GetWorkWeekData, IWorkWeek } from "./usecase/getWorkWeekData";
 import { MarkPointUseCase } from "./usecase/markPoint";
 import { GetCurrentStatus, ICurrentStatus } from "@/app/main/tabs/work/usecase/getCurrentStatus";
-import { getWorkPointButtonTitleUtil } from "@/app/main/tabs/work/utils/get-work-point-button-title.util";
 import { GetWeekReport } from "@/app/main/tabs/work/usecase/getWeekReport";
+import getWorkPointButtonTitleUtil from "@/app/main/tabs/work/utils/get-work-point-button-title.util";
 
 export enum WorkStatus {
 	WaitingStart = "waitingStart",
